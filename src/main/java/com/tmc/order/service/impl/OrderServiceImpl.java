@@ -1,10 +1,11 @@
-package com.tmc.order.service;
+package com.tmc.order.service.impl;
 
 import com.tmc.order.dto.OrderDto;
 import com.tmc.order.mapper.OrderMapper;
 import com.tmc.order.model.entity.Order;
 import com.tmc.order.model.enums.OrderStatus;
 import com.tmc.order.repository.OrderRepository;
+import com.tmc.order.service.OrderService;
 import com.tmc.restaurant.exception.RestaurantServiceException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

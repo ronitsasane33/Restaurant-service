@@ -1,6 +1,7 @@
 package com.tmc.order.model.entity;
 
 import com.tmc.order.model.enums.OrderStatus;
+import com.tmc.restaurant.entity.FoodItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Entity
@@ -31,8 +33,8 @@ public class Order {
     @Column(name = "creation_time")
     private Timestamp creationTime;
 
-//    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-//    private List<FoodItem> foodItems;
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    private List<FoodItem> foodItems;
 
     @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private Billing billing;

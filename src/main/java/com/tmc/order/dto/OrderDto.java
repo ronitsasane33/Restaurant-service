@@ -1,11 +1,13 @@
 package com.tmc.order.dto;
 
 import com.tmc.order.model.enums.OrderStatus;
+import com.tmc.restaurant.dto.FoodItemDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +17,6 @@ public class OrderDto {
     private String customerId;
     private OrderStatus orderStatus;
     private Timestamp creationTime;
-//    private List<FoodItem> foodItems;
+    private List<FoodItemDto> foodItems;
     private BillingDto billing;
 }
