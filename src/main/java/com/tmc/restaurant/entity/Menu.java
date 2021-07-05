@@ -23,7 +23,10 @@ public class Menu {
     @Column(name = "menuType")
     private String menuType;
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private Restaurant restaurant;
+
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<FoodItem> foodItems;
 
 }

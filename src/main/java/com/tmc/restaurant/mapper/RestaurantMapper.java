@@ -2,7 +2,10 @@ package com.tmc.restaurant.mapper;
 
 import com.tmc.restaurant.dto.RestaurantDto;
 import com.tmc.restaurant.entity.Restaurant;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+
 import java.util.List;
 
 @Mapper(componentModel = "spring",  uses = {AddressMapper.class})
