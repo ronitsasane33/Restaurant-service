@@ -1,5 +1,6 @@
 package com.tmc.restaurant.entity;
 
+import com.tmc.restaurant.entity.enums.FoodItemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,4 +28,7 @@ public class FoodItem {
 
     @Column(name = "food_description")
     private String foodItemDescription;
+
+    @Column(name = "food_status")
+    private FoodItemStatus foodItemStatus;
 }

@@ -5,6 +5,7 @@ import com.tmc.restaurant.dto.MenuDto;
 import com.tmc.restaurant.entity.FoodItem;
 import com.tmc.restaurant.entity.Menu;
 import com.tmc.restaurant.entity.Restaurant;
+import com.tmc.restaurant.entity.enums.FoodItemStatus;
 import com.tmc.restaurant.exception.RestaurantServiceException;
 import com.tmc.restaurant.mapper.FoodItemMapper;
 import com.tmc.restaurant.mapper.MenuMapper;
@@ -82,7 +83,10 @@ public class MenuServiceImpl implements MenuService {
         Optional<Menu> menuOptional = menuRespository.findById(menuId);
         if (!menuOptional.isPresent()) {
             throw new RestaurantServiceException("Menu with id" + menuId + "does not exist");
-        } else {
+        } else if(foodItemDto.getFoodItemStatus()== FoodItemStatus.DEACTIVE) {
+            throw new RestaurantServiceException("FoodItem "+ foodItemDto.getFoodItemName()
+                    + "is not Active");
+        }else{
             Menu menu = menuOptional.get();
             FoodItem foodItem = foodItemMapper.toFoodItem(foodItemDto);
             List<FoodItem> foodItems = menu.getFoodItems();
@@ -117,8 +121,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public MenuDto deleteMenu(String id) {
         Optional<Menu> menu = menuRespository.findById(id);
-        log.warn("Deleting the Menu: {} from restaurant {}, MenuService",
-                id, menu.get().getRestaurant().getRestaurantName());
+        log.warn("Deleting the Menu: {} from restaurant {}, MenuService", id, menu.get().getRestaurant().getRestaurantName());
         if (!menu.isPresent()) {
             throw new RestaurantServiceException("Menu with id" + id + "does not exist");
         } else {
