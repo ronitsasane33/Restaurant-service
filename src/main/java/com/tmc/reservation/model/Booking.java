@@ -25,13 +25,13 @@ public class Booking {
     @Column(name = "customer_id")
     private String customerId;
 
-    @Column(name = "booking_start_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
-    private Timestamp bookingStartTime;
-
     @Column(name = "booking_end_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Timestamp bookingEndTime;
+
+    @Column(name = "booking_start_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+    private Timestamp bookingStartTime;
 
     @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private RestaurantTable restaurantTable;

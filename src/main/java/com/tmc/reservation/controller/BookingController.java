@@ -7,20 +7,39 @@ import com.tmc.restaurant.response.Response;
 import com.tmc.restaurant.response.ResponseMetadata;
 import com.tmc.restaurant.response.StatusMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/booking")
+@RequestMapping(value = "/bookings")
 public class BookingController {
 
     private final BookingService bookingService;
 
     public BookingController(BookingServiceImpl bookingService) {
         this.bookingService = bookingService;
+    }
+
+    @GetMapping(value = "/scheduled")
+    public Response<List<BookingDto>> getAllFutureBookings() {
+        return Response.<List<BookingDto>>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(200)
+                        .statusMessage(StatusMessage.SUCCESS.name()).build())
+                .data(bookingService.getAllFutureBookings())
+                .build();
+    }
+
+    @GetMapping
+    public Response<List<BookingDto>> getAllBookings() {
+        return Response.<List<BookingDto>>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(200)
+                        .statusMessage(StatusMessage.SUCCESS.name()).build())
+                .data(bookingService.getAllBookings())
+                .build();
     }
 
     @PostMapping
