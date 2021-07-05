@@ -1,6 +1,7 @@
 package com.tmc.reservation.model;
 
 import com.tmc.reservation.model.enums.TableStatus;
+import com.tmc.restaurant.entity.Restaurant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,4 +28,7 @@ public class RestaurantTable {
 
     @Column(name = "tableStatus")
     private TableStatus tableStatus;
+
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private Restaurant restaurant;
 }

@@ -1,6 +1,7 @@
 package com.tmc.reservation.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tmc.restaurant.entity.Restaurant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,4 +36,7 @@ public class Booking {
 
     @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private RestaurantTable restaurantTable;
+
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private Restaurant restaurant;
 }

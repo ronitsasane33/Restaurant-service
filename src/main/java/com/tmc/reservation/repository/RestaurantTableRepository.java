@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface RestaurantTableRepository extends CrudRepository<RestaurantTable, String> {
 
-    @Query("SELECT tbl FROM RestaurantTable tbl  WHERE tbl.tableId not in (select booking.restaurantTable.tableId FROM Booking booking where booking.bookingStartTime between :startTime AND :endTime)")
-    List<RestaurantTable> getAvailableTables(@Param("startTime") Timestamp startTime, @Param("endTime") Timestamp endTime);
-   }
+    @Query("SELECT tbl FROM RestaurantTable tbl  WHERE tbl.restaurant.restaurantId = :id and tbl.tableId not in (select booking.restaurantTable.tableId FROM Booking booking where booking.bookingStartTime between :startTime AND :endTime)")
+    List<RestaurantTable> getAvailableTables(@Param("startTime") Timestamp startTime, @Param("endTime") Timestamp endTime, @Param("id") String id);
+
+    List<RestaurantTable> getAllByRestaurantRestaurantId(@Param("id") String id);
+}

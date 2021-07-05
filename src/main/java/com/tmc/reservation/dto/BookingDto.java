@@ -1,5 +1,7 @@
 package com.tmc.reservation.dto;
 
+import com.tmc.restaurant.dto.RestaurantDto;
+import com.tmc.restaurant.entity.Restaurant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,4 +17,5 @@ public class BookingDto {
     private Timestamp bookingEndTime;
     private Timestamp bookingStartTime;
     private RestaurantTableDto restaurantTable;
+    private RestaurantDto restaurant;
 }
