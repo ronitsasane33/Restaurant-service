@@ -61,7 +61,7 @@ LEVEL 1: end user     -  limited operations
 	c. delete menu                    LEVEL 2
 	d. get menu of restaurant         LEVEL 2
 	e. get menu of all restaurant     LEVEL 3
-	d. get menu by Id 				  LEVEL 1	
+	d. get menu by Id 		  LEVEL 1	
 
 3. Food Items:
 	a. add item                       LEVEL 2
@@ -69,7 +69,7 @@ LEVEL 1: end user     -  limited operations
 	c. update item                    LEVEL 2
 		1. update into menu also 
 	d. get item by id                 LEVEL 1
-	e. get all items 				  LEVEL 2
+	e. get all items 		  LEVEL 2
 ```
 
 
@@ -82,21 +82,21 @@ LEVEL 2: branch amid  -  all operations of a branch
 LEVEL 1: end user     -  limited operations    
 ```
 ```http
-    Functions                      Authorization LEVEL
+    Functions                              Authorization LEVEL
 1. Booking
-	a. Create Booking  						            LEVEL 1
-	*b. Delete Booking 						            LEVEL 1
-	c. Update Booking 						            LEVEL 1
-	d. Get Booking by id					            LEVEL 1
-	e. Get all bookings						            LEVEL 3
-	f. Get all booking of a resto 		  	    LEVEL 2
-	g. Get all scheduled booking of resto 	  LEVEL 2
+	a. Create Booking                       LEVEL 1
+	*b. Delete Booking 			LEVEL 1
+	c. Update Booking 			LEVEL 1
+	d. Get Booking by id			LEVEL 1
+	e. Get all bookings			LEVEL 3
+	f. Get all booking of a resto 		LEVEL 2
+	g. Get all scheduled booking of resto 	LEVEL 2
 	*h. CRUD on open hours
-	i. Get all scheduled bookings			        LEVEL 3
+	i. Get all scheduled bookings		LEVEL 3
 
 
 2. Restaurant Tables
-	a. Add table      		                  LEVEL 2
+	a. Add table      		        LEVEL 2
 	b. Batch add table                      LEVEL 2
 	e. get all resto tables                 LEVEL 1
 ```
@@ -110,20 +110,20 @@ LEVEL 2: branch amid  -  all operations of a branch
 LEVEL 1: end user     -  limited operations    
 ```
 ```http
-    Functions                           Authorization LEVEL
+    Functions                           		Authorization LEVEL
 
 1. Order
-	a. Place order by adding food items		  LEVEL 1
-	b. update order by removing items		    LEVEL 1
-	b. get order by id    		   			      LEVEL 1
-	c. get all orders of resto				      LEVEL 2
-	d. get all orders all resto				      LEVEL 3
-	e. get today's all orders of resto		  LEVEL 2
-   *f. get today's all orders all resto		LEVEL 3
-    h. Delete orders if status = placed		LEVEL 1
-    i. Get total bill						LEVEL 1
-    j. calculate collection of the day.		LEVEL 2
-    k. calculate collection all resto
+	a. Place order by adding food items		LEVEL 1
+	b. update order by removing items		LEVEL 1
+	b. get order by id    		   		LEVEL 1
+	c. get all orders of resto			LEVEL 2
+	d. get all orders all resto			LEVEL 3
+	e. get today's all orders of resto		LEVEL 2
+	*f. get today's all orders all resto		LEVEL 3
+	h. Delete orders if status = placed		LEVEL 1
+	i. Get total bill				LEVEL 1
+	j. calculate collection of the day.		LEVEL 2
+	k. calculate collection all resto
 
 ```
 
