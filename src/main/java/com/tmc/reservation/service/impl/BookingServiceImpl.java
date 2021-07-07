@@ -41,7 +41,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto getBookingById(String id) {
         log.info("Getting Booking by id: {} , Booking Service", id);
         Optional<Booking> booking = bookingRepository.findById(id);
-        if(!booking.isPresent()){
+        if (!booking.isPresent()) {
             throw new RestaurantServiceException("Booking with id" + id + "does not exist");
         }
         return bookingMapper.toBookingDto(booking.get());
@@ -99,7 +99,7 @@ public class BookingServiceImpl implements BookingService {
         log.info("Creating Booking : {} , Booking Service", bookingDto.getBookingId());
         Timestamp bookingStart = bookingDto.getBookingStartTime();
         Timestamp bookingEnd = bookingDto.getBookingStartTime();
-        bookingEnd.setTime(bookingEnd.getTime() + ((60 * 60)* 1000));
+        bookingEnd.setTime(bookingEnd.getTime() + ((60 * 60) * 1000));
         String restaurantId = bookingDto.getRestaurant().getRestaurantId();
         RestaurantTable table = getAvailbleTableAtRequiredTime(bookingStart, bookingEnd, restaurantId);
 
@@ -116,7 +116,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto updateBooking(String id, BookingDto bookingDto) {
         log.info("Updating Booking by id: {} , Booking Service", id);
         Optional<Booking> bookingOptional = bookingRepository.findById(id);
-        if(bookingDto.getBookingStartTime()!=null) {
+        if (bookingDto.getBookingStartTime() != null) {
             Timestamp bookingStart = bookingDto.getBookingStartTime();
             Timestamp bookingEnd = bookingDto.getBookingStartTime();
             bookingEnd.setTime(bookingEnd.getTime() + ((60 * 60) * 1000));
@@ -130,9 +130,9 @@ public class BookingServiceImpl implements BookingService {
             throw new RestaurantServiceException("Booking with id" + id + "does not exist");
         } else {
             Booking booking = bookingOptional.get();
-            if(bookingDto.getCustomerId()!=null) booking.setCustomerId(bookingDto.getCustomerId());
-            if(bookingDto.getBookingStartTime()!=null) booking.setBookingStartTime(bookingDto.getBookingStartTime());
-            if(bookingDto.getBookingEndTime()!=null) booking.setBookingEndTime(bookingDto.getBookingEndTime());
+            if (bookingDto.getCustomerId() != null) booking.setCustomerId(bookingDto.getCustomerId());
+            if (bookingDto.getBookingStartTime() != null) booking.setBookingStartTime(bookingDto.getBookingStartTime());
+            if (bookingDto.getBookingEndTime() != null) booking.setBookingEndTime(bookingDto.getBookingEndTime());
             bookingRepository.save(booking);
             return bookingMapper.toBookingDto(booking);
         }
@@ -155,7 +155,7 @@ public class BookingServiceImpl implements BookingService {
      * table at
      * required time
      */
-    private RestaurantTable getAvailbleTableAtRequiredTime(Timestamp bookingStart, Timestamp bookingEnd, String id){
+    private RestaurantTable getAvailbleTableAtRequiredTime(Timestamp bookingStart, Timestamp bookingEnd, String id) {
         RestaurantTable table = restaurantTableRepository
                 .getAvailableTables(bookingStart, bookingEnd, id)
                 .stream().findFirst().orElse(null);
@@ -165,7 +165,6 @@ public class BookingServiceImpl implements BookingService {
     /**
      * Method to
      * persist the booking
-     *
      */
     private Booking saveBooking(RestaurantTable table, Timestamp bookingStart,
                                 Timestamp bookingEnd, String customerId, RestaurantDto restaurant) {

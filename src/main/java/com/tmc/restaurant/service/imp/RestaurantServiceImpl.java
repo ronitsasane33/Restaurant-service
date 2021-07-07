@@ -29,11 +29,16 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public RestaurantDto getRestaurantById(String id) {
         log.info("Getting a restaurant by id: {} , restaurantService", id);
-        Optional<Restaurant> restaurant = restaurantRepository.findById(id);
-        if(!restaurant.isPresent()){
-            throw new RestaurantServiceException("Restaurant with id" + id + "does not exist");
+        try {
+            Optional<Restaurant> restaurant = restaurantRepository.findById(id);
+            if (!restaurant.isPresent()) {
+                throw new RestaurantServiceException("Restaurant with id" + id + "does not exist");
+            }
+            return restaurantMapper.toRestaurantDto(restaurant.get());
+        } catch (Exception e){
+            log.info("No restaurant present with the id {}", id);
+            throw new RestaurantServiceException(e.getMessage());
         }
-        return restaurantMapper.toRestaurantDto(restaurant.get());
     }
 
     @Override

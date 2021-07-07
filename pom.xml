@@ -103,6 +103,7 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<finalName>hamburger-company</finalName>
 				</configuration>
 			</plugin>
 
@@ -129,5 +130,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

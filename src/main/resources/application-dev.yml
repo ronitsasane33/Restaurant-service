@@ -4,16 +4,14 @@ server:
     context-path: /api
 
 spring:
-  profiles:
-    active: default
   datasource:
-    url: jdbc:mysql://localhost:3306/thcompany_db
-    username: root
-    password: rgit@1234
+    url: jdbc:mysql://app_db:3307/thcompany_db
+    username: admin
+    password: admin
   jpa:
     hibernate:
-      ddl-auto: validate
-    show-sql: false
+      ddl-auto: create
+    show-sql: true
   kafka:
     producer:
       bootstrap-servers: localhost:9092
