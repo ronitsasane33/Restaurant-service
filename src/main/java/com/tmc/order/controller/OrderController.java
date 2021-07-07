@@ -1,6 +1,7 @@
 package com.tmc.order.controller;
 
 import com.tmc.order.dto.OrderDto;
+import com.tmc.order.service.OrderProducerService;
 import com.tmc.order.service.OrderService;
 import com.tmc.restaurant.response.Response;
 import com.tmc.restaurant.response.ResponseMetadata;
@@ -15,9 +16,11 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderProducerService orderProducerService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderProducerService orderProducerService) {
         this.orderService = orderService;
+        this.orderProducerService = orderProducerService;
     }
 
     @GetMapping
@@ -38,8 +41,8 @@ public class OrderController {
      *
      */
     @PostMapping
-    public Response<String> placeOrder(@RequestBody OrderDto orderDTO) {
-        return orderService.placeOrder(orderDTO) ? Response.<String>builder()
+    public Response<String> placeOrder(@RequestBody OrderDto orderDto) {
+        return orderProducerService.placeOrder(orderDto) ? Response.<String>builder()
                 .meta(ResponseMetadata.builder()
                         .statusCode(200)
                         .statusMessage(StatusMessage.SUCCESS.name()).build())
@@ -85,12 +88,12 @@ public class OrderController {
     }
 
     @PutMapping(value = "{id}")
-    public Response<OrderDto> updateOrder(@PathVariable("id") String oid, @RequestBody OrderDto orderDTO) {
+    public Response<OrderDto> updateOrder(@PathVariable("id") String oid, @RequestBody OrderDto orderDto) {
         return Response.<OrderDto>builder()
                 .meta(ResponseMetadata.builder()
                         .statusCode(200)
                         .statusMessage(StatusMessage.SUCCESS.name()).build())
-                .data(orderService.updateOrder(oid, orderDTO))
+                .data(orderService.updateOrder(oid, orderDto))
                 .build();
     }
 }
