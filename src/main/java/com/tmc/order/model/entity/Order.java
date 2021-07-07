@@ -2,6 +2,7 @@ package com.tmc.order.model.entity;
 
 import com.tmc.order.model.enums.OrderStatus;
 import com.tmc.restaurant.entity.FoodItem;
+import com.tmc.restaurant.entity.Restaurant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,5 +39,8 @@ public class Order {
 
     @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private Billing billing;
+
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private Restaurant restaurant;
 
 }

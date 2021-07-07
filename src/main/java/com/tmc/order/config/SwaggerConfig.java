@@ -1,4 +1,4 @@
-package com.tmc.restaurant.config;
+package com.tmc.order.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
