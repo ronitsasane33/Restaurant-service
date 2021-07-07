@@ -8,6 +8,7 @@ import com.tmc.restaurant.response.ResponseMetadata;
 import com.tmc.restaurant.response.StatusMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Slf4j
@@ -35,10 +36,8 @@ public class OrderController {
     }
 
     /**
-     *
      * Gets new order
      * Passes to orderProducerService
-     *
      */
     @PostMapping
     public Response<String> placeOrder(@RequestBody OrderDto orderDto) {
@@ -48,12 +47,12 @@ public class OrderController {
                         .statusMessage(StatusMessage.SUCCESS.name()).build())
                 .data("Order got processed in Kafka")
                 .build()
-                :Response.<String>builder()
-                        .meta(ResponseMetadata.builder()
-                                .statusCode(400)
-                                .statusMessage(StatusMessage.UNKNOWN_INTERNAL_ERROR.name()).build())
-                        .data("Order failed to load")
-                        .build();
+                : Response.<String>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(400)
+                        .statusMessage(StatusMessage.UNKNOWN_INTERNAL_ERROR.name()).build())
+                .data("Order failed to load")
+                .build();
     }
 
     @GetMapping(value = "/page/{pageNumber}")

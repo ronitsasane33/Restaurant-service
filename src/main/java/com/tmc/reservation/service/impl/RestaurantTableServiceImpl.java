@@ -38,7 +38,7 @@ public class RestaurantTableServiceImpl implements RestaurantTablesService {
     @Override
     public List<RestaurantTableDto> getAllTablesByRestaurant(String id) {
         log.info("Getting all tabels by restaurant: {} , Booking Service", id);
-         List<RestaurantTableDto> restaurantTableDtos = restaurantTableMapper
+        List<RestaurantTableDto> restaurantTableDtos = restaurantTableMapper
                 .toRestaurantTableDtos(restaurantTableRepository.getAllByRestaurantRestaurantId(id));
         if (restaurantTableDtos.size() > 0) {
             return restaurantTableDtos;
@@ -55,7 +55,7 @@ public class RestaurantTableServiceImpl implements RestaurantTablesService {
 
     @Override
     public boolean createBulkTables(int numberOfTables) {
-        for(int tableNumber = 1; tableNumber<=numberOfTables;tableNumber++) {
+        for (int tableNumber = 1; tableNumber <= numberOfTables; tableNumber++) {
             RestaurantTable restaurantTable = new RestaurantTable();
             restaurantTable.setTableNumber(tableNumber);
             restaurantTable.setTableStatus(TableStatus.AVAILABLE);
