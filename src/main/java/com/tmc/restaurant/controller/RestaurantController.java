@@ -5,6 +5,10 @@ import com.tmc.restaurant.response.Response;
 import com.tmc.restaurant.response.ResponseMetadata;
 import com.tmc.restaurant.response.StatusMessage;
 import com.tmc.restaurant.service.RestaurantService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +25,12 @@ public class RestaurantController {
         this.restaurantService = restaurantService;
     }
 
+    @Operation(summary = "Get restaurant by ID", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping(value = "{id}")
     public Response<RestaurantDto> getRestuarantById(@PathVariable String id) {
         log.info("Getting restaurants by id: {}, restaurantController", id);
@@ -32,6 +42,12 @@ public class RestaurantController {
                 .build();
     }
 
+    @Operation(summary = "Get restaurant by name", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping(value = "/restaurant/{name}")
     public Response<RestaurantDto> getRestuarantByName(@PathVariable String name) {
         log.info("Getting restaurants by name: {}, restaurantController", name);
@@ -43,6 +59,12 @@ public class RestaurantController {
                 .build();
     }
 
+    @Operation(summary = "Get all restaurants", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping()
     public Response<List<RestaurantDto>> getAllRestuarants(
             @RequestParam(defaultValue = "0") Integer pageNumber,
@@ -59,6 +81,12 @@ public class RestaurantController {
                 .build();
     }
 
+    @Operation(summary = "Create new restaurant", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @PostMapping()
     public Response<String> createRestaurant(@RequestBody RestaurantDto restaurantDto) {
         log.info("Creating new restaurant: {}", restaurantDto.getRestaurantName());
@@ -71,11 +99,17 @@ public class RestaurantController {
                 : Response.<String>builder()
                 .meta(ResponseMetadata.builder()
                         .statusCode(400)
-                        .statusMessage(StatusMessage.UNKNOWN_INTERNAL_ERROR.name()).build())
+                        .statusMessage(StatusMessage.INTERNAL_ERROR.name()).build())
                 .data("Restaurant failed to add")
                 .build();
     }
 
+    @Operation(summary = "Update a restaurant", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @PutMapping(value = "{id}")
     public Response<RestaurantDto> updateRestaurant(
             @PathVariable("id") String id,
@@ -89,6 +123,12 @@ public class RestaurantController {
                 .build();
     }
 
+    @Operation(summary = "Delete a restaurant", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @DeleteMapping(value = "{id}")
     public Response<RestaurantDto> deleteRestaurant(@PathVariable("id") String id){
         log.warn("Deleting the restaurant: {}, RestaurantController", id);

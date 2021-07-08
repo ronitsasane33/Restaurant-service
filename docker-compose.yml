@@ -1,23 +1,26 @@
-version: "1.0"
+version: "3.1"
 services:
-  hamburger-company:
-    build: .
+  app:
+    build: ./
     restart: on-failure
-    container_name: hamburger-company-container
+    container_name: hamburger-company
     ports:
-      - 8080:8080
+      - "8080:8080"
     depends_on:
-      - hamburger-mysql_db
-    links:
-      - hamburger-mysql_db:app_db
-  hamburger-mysql_db:
-    image: "mysql"
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3307/thcompany_db
+      - SPRING_DATASOURCE_USERNAME=uname
+      - SPRING_DATASOURCE_PASSWORD=uname
+
+  db:
+    image: "mysql:5.7"
     restart: on-failure
     container_name: mysql-container
     ports:
-      - 3307:3306
+      - "3307:3306"
     environment:
-      MYSQL_DATABASE: thcompany_db
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
-      MYSQL_ROOT_PASSWORD: admin
+      - MYSQL_DATABASE=thcompany_db
+      - MYSQL_USER=uname
+      - MYSQL_PASSWORD=uname
+      - MYSQL_ROOT_PASSWORD=admin123

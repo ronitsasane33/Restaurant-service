@@ -1,12 +1,12 @@
 package com.tmc.restaurant.service.imp;
 
-import com.tmc.restaurant.entity.enums.FoodItemStatus;
-import com.tmc.restaurant.respository.FoodItemRespository;
-import com.tmc.restaurant.service.FoodItemService;
 import com.tmc.restaurant.dto.FoodItemDto;
 import com.tmc.restaurant.entity.FoodItem;
+import com.tmc.restaurant.entity.enums.FoodItemStatus;
 import com.tmc.restaurant.exception.RestaurantServiceException;
 import com.tmc.restaurant.mapper.FoodItemMapper;
+import com.tmc.restaurant.respository.FoodItemRespository;
+import com.tmc.restaurant.service.FoodItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,22 +29,30 @@ public class FoodItemServiceImpl implements FoodItemService {
 
     @Override
     public FoodItemDto getFoodItemById(String id) {
-        log.info("Getting Food Item by id: {} , FoodItemService", id);
-        Optional<FoodItem> foodItem = foodItemRespository.findById(id);
-        if(!foodItem.isPresent()){
-            throw new RestaurantServiceException("FoodItem with id" + id + "does not exist");
+        try {
+            log.info("Getting Food Item by id: {} , FoodItemService", id);
+            Optional<FoodItem> foodItem = foodItemRespository.findById(id);
+            if (!foodItem.isPresent()) {
+                throw new RestaurantServiceException("FoodItem with id" + id + "does not exist");
+            }
+            return foodItemMapper.toFoodItemDto(foodItem.get());
+        } catch (Exception e) {
+            throw new RestaurantServiceException(e.getMessage());
         }
-        return foodItemMapper.toFoodItemDto(foodItem.get());
     }
 
     @Override
     public List<FoodItemDto> getAllFoodItems() {
-        log.info("Getting all Food Items , FoodItemService");
-        List<FoodItemDto> foodItemDtos = foodItemMapper.toFoodItemDtos((List<FoodItem>) foodItemRespository.findAll());
-        if (foodItemDtos.size() > 0) {
-            return foodItemDtos;
+        try {
+            log.info("Getting all Food Items , FoodItemService");
+            List<FoodItemDto> foodItemDtos = foodItemMapper.toFoodItemDtos((List<FoodItem>) foodItemRespository.findAll());
+            if (foodItemDtos.size() > 0) {
+                return foodItemDtos;
+            }
+            throw new RestaurantServiceException("No food Items found");
+        } catch (Exception e) {
+            throw new RestaurantServiceException(e.getMessage());
         }
-        throw new RestaurantServiceException("No food Items found");
     }
 
     @Override
@@ -57,31 +65,41 @@ public class FoodItemServiceImpl implements FoodItemService {
 
     @Override
     public FoodItemDto updateFoodItem(String foodItemId, FoodItemDto foodItemDto) {
-        log.info("Updating Food Item: {}, FoodItemService", foodItemId);
-        Optional<FoodItem> foodItemOptional = foodItemRespository.findById(foodItemId);
-        if (!foodItemOptional.isPresent()) {
-            throw new RestaurantServiceException("Food Item with id" + foodItemId + "does not exist");
-        } else {
-            FoodItem foodItem = foodItemOptional.get();
-            if(foodItemDto.getFoodItemName() != null) foodItem.setFoodItemName(foodItemDto.getFoodItemName());
-            if(foodItemDto.getFoodItemPrice() != 0) foodItem.setFoodItemPrice(foodItemDto.getFoodItemPrice());
-            if(foodItemDto.getFoodItemDescription() != null) foodItem.setFoodItemDescription(foodItemDto.getFoodItemDescription());
-            if(foodItemDto.getFoodItemStatus() != null) foodItem.setFoodItemStatus(foodItemDto.getFoodItemStatus());
-            foodItemRespository.save(foodItem);
-            return foodItemMapper.toFoodItemDto(foodItem);
+        try{
+            log.info("Updating Food Item: {}, FoodItemService", foodItemId);
+            Optional<FoodItem> foodItemOptional = foodItemRespository.findById(foodItemId);
+            if (!foodItemOptional.isPresent()) {
+                throw new RestaurantServiceException("Food Item with id" + foodItemId + "does not exist");
+            } else {
+                FoodItem foodItem = foodItemOptional.get();
+                if (foodItemDto.getFoodItemName() != null) foodItem.setFoodItemName(foodItemDto.getFoodItemName());
+                if (foodItemDto.getFoodItemPrice() != 0) foodItem.setFoodItemPrice(foodItemDto.getFoodItemPrice());
+                if (foodItemDto.getFoodItemDescription() != null) foodItem
+                        .setFoodItemDescription(
+                                foodItemDto.getFoodItemDescription());
+                if (foodItemDto.getFoodItemStatus() != null) foodItem.setFoodItemStatus(foodItemDto.getFoodItemStatus());
+                foodItemRespository.save(foodItem);
+                return foodItemMapper.toFoodItemDto(foodItem);
+            }
+        }catch (Exception e){
+            throw new RestaurantServiceException(e.getMessage());
         }
     }
 
     @Override
     public FoodItemDto deleteFoodItem(String foodItemId) {
-        Optional<FoodItem> foodItem = foodItemRespository.findById(foodItemId);
-        log.warn("Deleting the Food Item: {}, FoodItemService",foodItemId);
-        if (!foodItem.isPresent()) {
-            throw new RestaurantServiceException("Food Item with id" + foodItemId + "does not exist");
-        } else {
-            foodItem.get().setFoodItemStatus(FoodItemStatus.DEACTIVE);
-            foodItemRespository.save(foodItem.get());
-            return foodItemMapper.toFoodItemDto(foodItem.get());
+        try{
+            Optional<FoodItem> foodItem = foodItemRespository.findById(foodItemId);
+            log.warn("Deleting the Food Item: {}, FoodItemService", foodItemId);
+            if (!foodItem.isPresent()) {
+                throw new RestaurantServiceException("Food Item with id" + foodItemId + "does not exist");
+            } else {
+                foodItem.get().setFoodItemStatus(FoodItemStatus.DEACTIVE);
+                foodItemRespository.save(foodItem.get());
+                return foodItemMapper.toFoodItemDto(foodItem.get());
+            }
+        }catch (Exception e){
+            throw new RestaurantServiceException(e.getMessage());
         }
     }
 }

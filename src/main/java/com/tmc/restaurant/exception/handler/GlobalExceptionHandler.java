@@ -1,8 +1,10 @@
 package com.tmc.restaurant.exception.handler;
 
 
-import com.tmc.restaurant.exception.MenuServiceException;
+import com.tmc.restaurant.exception.OrderServiceException;
+import com.tmc.restaurant.exception.ReservationServiceException;
 import com.tmc.restaurant.exception.RestaurantServiceException;
+import com.tmc.restaurant.exception.UserServiceException;
 import com.tmc.restaurant.response.Response;
 import com.tmc.restaurant.response.ResponseMetadata;
 import com.tmc.restaurant.response.StatusMessage;
@@ -13,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Slf4j
 @ControllerAdvice
@@ -21,18 +23,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RestaurantServiceException.class)
     public ResponseEntity<Response<?>> handleRestaurantException(RestaurantServiceException e) {
         log.error(e.getClass().getSimpleName(), e.getMessage());
-        return buildResponse(StatusMessage.UNKNOWN_INTERNAL_ERROR, INTERNAL_SERVER_ERROR, e.getMessage());
+        return buildResponse(StatusMessage.INTERNAL_ERROR, BAD_REQUEST, e.getMessage());
     }
 
-    @ExceptionHandler(MenuServiceException.class)
-    public ResponseEntity<Response<?>> handleMenuException(RestaurantServiceException e) {
-        return buildResponse(StatusMessage.UNKNOWN_INTERNAL_ERROR, INTERNAL_SERVER_ERROR, e.getMessage());
+    @ExceptionHandler(ReservationServiceException.class)
+    public ResponseEntity<Response<?>> handleReservationException(ReservationServiceException e) {
+        return buildResponse(StatusMessage.INTERNAL_ERROR, BAD_REQUEST, e.getMessage());
     }
 
-    @ExceptionHandler(MenuServiceException.class)
-    public ResponseEntity<Response<?>> handleFoodItemException(RestaurantServiceException e) {
-        return buildResponse(StatusMessage.UNKNOWN_INTERNAL_ERROR, INTERNAL_SERVER_ERROR, e.getMessage());
+    @ExceptionHandler(OrderServiceException.class)
+    public ResponseEntity<Response<?>> handleOrderException(OrderServiceException e) {
+        return buildResponse(StatusMessage.INTERNAL_ERROR, BAD_REQUEST, e.getMessage());
     }
+
+    @ExceptionHandler(UserServiceException.class)
+    public ResponseEntity<Response<?>> handleUserException(UserServiceException e) {
+        return buildResponse(StatusMessage.INTERNAL_ERROR, BAD_REQUEST, e.getMessage());
+    }
+
 
     private ResponseEntity<Response<?>> buildResponse(StatusMessage statusMessage, HttpStatus status, String message) {
         var response = Response.builder()

@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class FoodItemServiceException extends  RuntimeException {
+public class ReservationServiceException extends  RuntimeException {
     public static final long serialVersionUID = 1L;
 
-    public FoodItemServiceException(String message, Throwable cause) {
+    public ReservationServiceException(String message, Throwable cause) {
         super(message, cause);
     }
-    public FoodItemServiceException(String message) {
+    public ReservationServiceException(String message) {
         super(message);
     }
 

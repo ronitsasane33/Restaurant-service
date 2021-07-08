@@ -6,6 +6,10 @@ import com.tmc.restaurant.dto.FoodItemDto;
 import com.tmc.restaurant.response.Response;
 import com.tmc.restaurant.response.ResponseMetadata;
 import com.tmc.restaurant.response.StatusMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +26,12 @@ public class FoodItemController {
         this.foodItemService = foodItemService;
     }
 
+    @Operation(summary = "Get food item by ID", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping(value = "{id}")
     public Response<FoodItemDto> getFoodItemById(@PathVariable String id){
         log.info("Getting Food Item: {} FoodItemController", id);
@@ -33,6 +43,12 @@ public class FoodItemController {
                 .build();
     }
 
+    @Operation(summary = "Get all food Items", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping
     public Response<List<FoodItemDto>> getAllFoodItems() {
         log.info("Get all FoodItems, Order-service");
@@ -44,6 +60,12 @@ public class FoodItemController {
                 .build();
     }
 
+    @Operation(summary = "Create food item", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @PostMapping
     public Response<String> createFoodItem(@RequestBody FoodItemDto foodItemDto) {
         log.info("create new FoodItems, Order-service");
@@ -56,11 +78,17 @@ public class FoodItemController {
                 :Response.<String>builder()
                 .meta(ResponseMetadata.builder()
                         .statusCode(400)
-                        .statusMessage(StatusMessage.UNKNOWN_INTERNAL_ERROR.name()).build())
+                        .statusMessage(StatusMessage.INTERNAL_ERROR.name()).build())
                 .data("Food Item failed to add")
                 .build();
     }
 
+    @Operation(summary = "Update Food Item", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @PutMapping(value = "/{foodItemId}")
     public Response<FoodItemDto> updateFoodItem(
             @PathVariable("foodItemId") String foodItemId,
@@ -74,6 +102,12 @@ public class FoodItemController {
                 .build();
     }
 
+    @Operation(summary = "Delete food item", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @DeleteMapping(value = "/{foodItemId}")
     public Response<FoodItemDto> deleteFoodItem(@PathVariable("foodItemId") String foodItemId){
         log.warn("Deleting the Food Item: {}, FoodItemController", foodItemId);

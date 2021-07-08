@@ -6,7 +6,7 @@ import com.tmc.order.model.entity.Order;
 import com.tmc.order.model.enums.OrderStatus;
 import com.tmc.order.repository.OrderRepository;
 import com.tmc.order.service.OrderService;
-import com.tmc.restaurant.exception.RestaurantServiceException;
+import com.tmc.restaurant.exception.OrderServiceException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,27 +27,42 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public List<OrderDto> getAllOrders() {
-        List<OrderDto> orders = orderMapper.toOrderDTOs((List<Order>) orderRepository.findAll());
-        if (orders.size() > 0) {
-            return orders;
+        try {
+            List<OrderDto> orders = orderMapper.toOrderDTOs((List<Order>) orderRepository.findAll());
+            if (orders.size() > 0) {
+                return orders;
+            }
+            throw new OrderServiceException("No orders placed");
+        } catch (Exception e) {
+            throw new OrderServiceException(e.getMessage());
         }
-        throw new RestaurantServiceException("No orders placed");
     }
 
     public List<OrderDto> getOrderPage(int pagenumber) {
-        List<OrderDto> orders = orderMapper.toOrderDTOs(orderRepository.findAll(PageRequest.of(pagenumber, 2)).getContent());
-        if (orders.size() > 0) {
-            return orders;
+        try {
+            List<OrderDto> orders = orderMapper
+                    .toOrderDTOs(orderRepository
+                            .findAll(PageRequest
+                                    .of(pagenumber, 2)).getContent());
+            if (orders.size() > 0) {
+                return orders;
+            }
+            throw new OrderServiceException("No orders");
+        } catch (Exception e) {
+            throw new OrderServiceException(e.getMessage());
         }
-        throw new RestaurantServiceException("No orders");
     }
 
     public OrderDto getOrderById(String eid) {
-        Optional<Order> order = orderRepository.findById(eid);
-        if (!order.isPresent()) {
-            throw new RestaurantServiceException("Order with id" + eid + "does not exist");
+        try {
+            Optional<Order> order = orderRepository.findById(eid);
+            if (!order.isPresent()) {
+                throw new OrderServiceException("Order with id" + eid + "does not exist");
+            }
+            return orderMapper.toOderDTO(order.get());
+        } catch (Exception e) {
+            throw new OrderServiceException(e.getMessage());
         }
-        return orderMapper.toOderDTO(order.get());
     }
 
     public Boolean placeOrder(OrderDto orderDTO) {
@@ -59,25 +74,33 @@ public class OrderServiceImpl implements OrderService {
 
 
     public OrderDto cancelOrder(String id) {
-        Optional<Order> ordersOptional = orderRepository.findById(id);
-        if (!ordersOptional.isPresent()) {
-            throw new RestaurantServiceException("Order with id" + id + "does not exist");
-        } else {
-            Order order = ordersOptional.get();
-            order.setOrderStatus(OrderStatus.CANCELLED);
-            orderRepository.save(order);
-            return orderMapper.toOderDTO(order);
+        try {
+            Optional<Order> ordersOptional = orderRepository.findById(id);
+            if (!ordersOptional.isPresent()) {
+                throw new OrderServiceException("Order with id" + id + "does not exist");
+            } else {
+                Order order = ordersOptional.get();
+                order.setOrderStatus(OrderStatus.CANCELLED);
+                orderRepository.save(order);
+                return orderMapper.toOderDTO(order);
+            }
+        } catch (Exception e) {
+            throw new OrderServiceException(e.getMessage());
         }
     }
 
     public OrderDto updateOrder(String id, OrderDto orderDTO) {
-        Optional<Order> ordersOptional = orderRepository.findById(id);
-        if (!ordersOptional.isPresent()) {
-            throw new RestaurantServiceException("Order with id" + id + "does not exist");
-        } else {
-            Order order = orderMapper.ToOrder(orderDTO);
-            orderRepository.save(order);
-            return orderMapper.toOderDTO(order);
+        try {
+            Optional<Order> ordersOptional = orderRepository.findById(id);
+            if (!ordersOptional.isPresent()) {
+                throw new OrderServiceException("Order with id" + id + "does not exist");
+            } else {
+                Order order = orderMapper.ToOrder(orderDTO);
+                orderRepository.save(order);
+                return orderMapper.toOderDTO(order);
+            }
+        } catch (Exception e) {
+            throw new OrderServiceException(e.getMessage());
         }
     }
 }
