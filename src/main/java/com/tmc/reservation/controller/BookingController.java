@@ -3,10 +3,13 @@ package com.tmc.reservation.controller;
 import com.tmc.reservation.dto.BookingDto;
 import com.tmc.reservation.service.BookingService;
 import com.tmc.reservation.service.impl.BookingServiceImpl;
-import com.tmc.restaurant.dto.FoodItemDto;
 import com.tmc.restaurant.response.Response;
 import com.tmc.restaurant.response.ResponseMetadata;
 import com.tmc.restaurant.response.StatusMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +26,14 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
+    @Operation(summary = "Get booking by ID", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping(value = "{id}")
-    public Response<BookingDto> getBookingById(@PathVariable String id){
+    public Response<BookingDto> getBookingById(@PathVariable String id) {
         log.info("Getting Booking: {} Booking Controller", id);
         return Response.<BookingDto>builder()
                 .meta(ResponseMetadata.builder()
@@ -34,6 +43,12 @@ public class BookingController {
                 .build();
     }
 
+    @Operation(summary = "Get all bookings", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping
     public Response<List<BookingDto>> getAllBookings() {
         log.info("Get all the bookings");
@@ -45,6 +60,12 @@ public class BookingController {
                 .build();
     }
 
+    @Operation(summary = "Get booking by restaurant", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping(value = "/restaurant/{id}")
     public Response<List<BookingDto>> getAllBookingsByRestaurant(@PathVariable("id") String id) {
         log.info("Get all the bookings by Restaurant {}", id);
@@ -56,6 +77,12 @@ public class BookingController {
                 .build();
     }
 
+    @Operation(summary = "Get all future/scheduled booking of restaurant", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping(value = "scheduled/restaurant/{id}")
     public Response<List<BookingDto>> getAllScheduledBookingsByRestaurant(@PathVariable("id") String id) {
         log.info("Get all the scheduled bookings by Restaurant {}", id);
@@ -67,6 +94,12 @@ public class BookingController {
                 .build();
     }
 
+    @Operation(summary = "Get all scheduled/future bookings", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping(value = "/scheduled")
     public Response<List<BookingDto>> getAllFutureBookings() {
         log.info("Get all the scheduled bookings");
@@ -78,6 +111,12 @@ public class BookingController {
                 .build();
     }
 
+    @Operation(summary = "Create new booking", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @PostMapping
     public Response<String> createBooking(@RequestBody BookingDto bookingDto) {
         log.info("creating booking, booking controller");
@@ -87,14 +126,20 @@ public class BookingController {
                         .statusMessage(StatusMessage.SUCCESS.name()).build())
                 .data("Booking Successful")
                 .build()
-                :Response.<String>builder()
+                : Response.<String>builder()
                 .meta(ResponseMetadata.builder()
                         .statusCode(400)
-                        .statusMessage(StatusMessage.UNKNOWN_INTERNAL_ERROR.name()).build())
+                        .statusMessage(StatusMessage.INTERNAL_ERROR.name()).build())
                 .data("Booking Failed")
                 .build();
     }
 
+    @Operation(summary = "Update the booking", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @PutMapping(value = "/{id}")
     public Response<BookingDto> updateBooking(
             @PathVariable("id") String id,
@@ -108,8 +153,14 @@ public class BookingController {
                 .build();
     }
 
+    @Operation(summary = "Cancel the booking", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @DeleteMapping(value = "/{id}")
-    public Response<BookingDto> deleteBooking(@PathVariable("id") String id){
+    public Response<BookingDto> deleteBooking(@PathVariable("id") String id) {
         log.info("Deleting booking : {}, Booking Controller", id);
         return Response.<BookingDto>builder()
                 .meta(ResponseMetadata.builder()

@@ -5,6 +5,10 @@ import com.tmc.restaurant.response.ResponseMetadata;
 import com.tmc.restaurant.response.StatusMessage;
 import com.tmc.user.dto.UserDto;
 import com.tmc.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,22 +25,12 @@ public class userController {
         this.userService = userService;
     }
 
-//    fsfsdfsdddddddddddddddd
-    @GetMapping(value = "bm/badmin")
-    public String home(){
-        return "all";
-    }
-
-    @GetMapping(value = "ur/user")
-    public String l1(){
-        return "user";
-    }
-
-    @GetMapping(value = "pm/all")
-    public String l2(){
-        return "admin";
-    }
-
+    @Operation(summary = "Get user by ID", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping(value = "{id}")
     public Response<UserDto> getUserById(@PathVariable String id) {
         log.info("Getting User by id: {}, userController", id);
@@ -48,6 +42,12 @@ public class userController {
                 .build();
     }
 
+    @Operation(summary = "Get all users", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping()
     public Response<List<UserDto>> getAllUsers(
             @RequestParam(defaultValue = "0") Integer pageNumber,
@@ -61,6 +61,12 @@ public class userController {
                 .build();
     }
 
+    @Operation(summary = "Create new user", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @PostMapping(value = "/registration")
     public Response<String> createUser(@RequestBody UserDto userDto) {
         log.info("Create User with ID {}, userController", userDto.getUserId());
@@ -73,7 +79,7 @@ public class userController {
                 : Response.<String>builder()
                 .meta(ResponseMetadata.builder()
                         .statusCode(400)
-                        .statusMessage(StatusMessage.UNKNOWN_INTERNAL_ERROR.name()).build())
+                        .statusMessage(StatusMessage.INTERNAL_ERROR.name()).build())
                 .data("User failed to add")
                 .build();
     }

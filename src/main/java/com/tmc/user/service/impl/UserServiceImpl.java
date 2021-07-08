@@ -1,6 +1,7 @@
 package com.tmc.user.service.impl;
 
 import com.tmc.restaurant.exception.RestaurantServiceException;
+import com.tmc.restaurant.exception.UserServiceException;
 import com.tmc.user.dto.UserDto;
 import com.tmc.user.entity.User;
 import com.tmc.user.mapper.UserMapper;
@@ -21,7 +22,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRespository userRespository;
-    private  final UserMapper userMapper;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRespository userRespository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
@@ -32,24 +33,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(String id) {
-        log.info("Getting User by id: {} , UserService", id);
-        Optional<User> user = userRespository.findById(id);
-        if(!user.isPresent()){
-            throw new RestaurantServiceException("User with id" + id + "does not exist");
+        try{
+            log.info("Getting User by id: {} , UserService", id);
+            Optional<User> user = userRespository.findById(id);
+            if (!user.isPresent()) {
+                throw new UserServiceException("User with id" + id + "does not exist");
+            }
+            return userMapper.toUserDto(user.get());
+        }catch (Exception e){
+            throw new UserServiceException(e.getMessage());
         }
-        return userMapper.toUserDto(user.get());
     }
 
     @Override
     public List<UserDto> getAllUsers(Integer pageNumber, Integer pageSize) {
-        log.info("Getting all the User, UserService");
-        List<UserDto> userDtos = userMapper
-                .toUserDtos(userRespository
-                        .findAll(PageRequest.of(pageNumber, pageSize)).getContent());
-        if (userDtos.size() > 0) {
-            return userDtos;
+        try {
+            log.info("Getting all the User, UserService");
+            List<UserDto> userDtos = userMapper
+                    .toUserDtos(userRespository
+                            .findAll(PageRequest.of(pageNumber, pageSize)).getContent());
+            if (userDtos.size() > 0) {
+                return userDtos;
+            }
+            throw new UserServiceException("No Users found");
+        } catch (Exception e) {
+            throw new UserServiceException(e.getMessage());
         }
-        throw new RestaurantServiceException("No Users found");
     }
 
     @Override

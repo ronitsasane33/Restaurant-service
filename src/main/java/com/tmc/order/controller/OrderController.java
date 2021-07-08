@@ -6,8 +6,12 @@ import com.tmc.order.service.OrderService;
 import com.tmc.restaurant.response.Response;
 import com.tmc.restaurant.response.ResponseMetadata;
 import com.tmc.restaurant.response.StatusMessage;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.List;
 
@@ -24,21 +28,44 @@ public class OrderController {
         this.orderProducerService = orderProducerService;
     }
 
-    @GetMapping
-    public Response<List<OrderDto>> getAllOrders() {
-        log.info("Inside Get all orders from Order-service");
+    @Operation(summary = "Get order by ID", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
+    @GetMapping(value = "{id}")
+    public Response<OrderDto> getOrderById(@PathVariable("id") String id) {
+        return Response.<OrderDto>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(200)
+                        .statusMessage(StatusMessage.SUCCESS.name()).build())
+                .data((orderService.getOrderById(id)))
+                .build();
+    }
+
+    @Operation(summary = "Get all Orders", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
+    @GetMapping(value = "/page/{pageNumber}")
+    public Response<List<OrderDto>> getAllOrdersPagination(@PathVariable("pageNumber") int pagenumber) {
         return Response.<List<OrderDto>>builder()
                 .meta(ResponseMetadata.builder()
                         .statusCode(200)
                         .statusMessage(StatusMessage.SUCCESS.name()).build())
-                .data(orderService.getAllOrders())
+                .data(orderService.getOrderPage(pagenumber))
                 .build();
     }
 
-    /**
-     * Gets new order
-     * Passes to orderProducerService
-     */
+    @Operation(summary = "Place new order", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @PostMapping
     public Response<String> placeOrder(@RequestBody OrderDto orderDto) {
         return orderProducerService.placeOrder(orderDto) ? Response.<String>builder()
@@ -50,32 +77,17 @@ public class OrderController {
                 : Response.<String>builder()
                 .meta(ResponseMetadata.builder()
                         .statusCode(400)
-                        .statusMessage(StatusMessage.UNKNOWN_INTERNAL_ERROR.name()).build())
+                        .statusMessage(StatusMessage.INTERNAL_ERROR.name()).build())
                 .data("Order failed to load")
                 .build();
     }
 
-    @GetMapping(value = "/page/{pageNumber}")
-    public Response<List<OrderDto>> getAllOrdersPagination(@PathVariable("pageNumber") int pagenumber) {
-        return Response.<List<OrderDto>>builder()
-                .meta(ResponseMetadata.builder()
-                        .statusCode(200)
-                        .statusMessage(StatusMessage.SUCCESS.name()).build())
-                .data(orderService.getOrderPage(pagenumber))
-                .build();
-    }
-
-
-    @GetMapping(value = "{id}")
-    public Response<OrderDto> getOrderById(@PathVariable("id") String id) {
-        return Response.<OrderDto>builder()
-                .meta(ResponseMetadata.builder()
-                        .statusCode(200)
-                        .statusMessage(StatusMessage.SUCCESS.name()).build())
-                .data((orderService.getOrderById(id)))
-                .build();
-    }
-
+    @Operation(summary = "Cancel order", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @PutMapping(value = "/cancel/{id}")
     public Response<OrderDto> cancelOrder(@PathVariable("id") String id) {
         return Response.<OrderDto>builder()
@@ -86,6 +98,12 @@ public class OrderController {
                 .build();
     }
 
+    @Operation(summary = "Update the order", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @PutMapping(value = "{id}")
     public Response<OrderDto> updateOrder(@PathVariable("id") String oid, @RequestBody OrderDto orderDto) {
         return Response.<OrderDto>builder()

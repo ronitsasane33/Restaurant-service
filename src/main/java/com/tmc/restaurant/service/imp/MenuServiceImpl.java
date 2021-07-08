@@ -4,7 +4,6 @@ import com.tmc.restaurant.dto.FoodItemDto;
 import com.tmc.restaurant.dto.MenuDto;
 import com.tmc.restaurant.entity.FoodItem;
 import com.tmc.restaurant.entity.Menu;
-import com.tmc.restaurant.entity.Restaurant;
 import com.tmc.restaurant.entity.enums.FoodItemStatus;
 import com.tmc.restaurant.exception.RestaurantServiceException;
 import com.tmc.restaurant.mapper.FoodItemMapper;
@@ -37,36 +36,46 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuDto getMenuById(String id) {
-        log.info("Getting Menu by id: {} , restaurantService", id);
-        Optional<Menu> menu = menuRespository.findById(id);
-        if(!menu.isPresent()){
-            throw new RestaurantServiceException("Menu with id" + id + "does not exist");
+        try {
+            log.info("Getting Menu by id: {} , restaurantService", id);
+            Optional<Menu> menu = menuRespository.findById(id);
+            if (!menu.isPresent()) {
+                throw new RestaurantServiceException("Menu with id" + id + "does not exist");
+            }
+            return menuMapper.toMenuDto(menu.get());
+        } catch (Exception e) {
+            throw new RestaurantServiceException(e.getMessage());
         }
-        return menuMapper.toMenuDto(menu.get());
-
     }
 
     @Override
     public List<MenuDto> getAllMenusOfCurrentRestaurant(String restaurantId) {
-        log.info("Getting all menus of restaurant {} , restaurantService", restaurantId);
-        List<MenuDto> menuDtos = menuMapper
-                .toMenuDtos( menuRespository.findAllByRestaurantRestaurantId(restaurantId));
-        if (menuDtos.size() > 0) {
-            return menuDtos;
+        try {
+            log.info("Getting all menus of restaurant {} , restaurantService", restaurantId);
+            List<MenuDto> menuDtos = menuMapper
+                    .toMenuDtos(menuRespository.findAllByRestaurantRestaurantId(restaurantId));
+            if (menuDtos.size() > 0) {
+                return menuDtos;
+            }
+            throw new RestaurantServiceException("No Menus found");
+        } catch (Exception e) {
+            throw new RestaurantServiceException(e.getMessage());
         }
-        throw new RestaurantServiceException("No Menus found");
     }
 
     @Override
     public List<MenuDto> getAllMenus() {
-        log.info("Getting all menus in system , restaurantService");
-        List<MenuDto> menuDtos = menuMapper
-                .toMenuDtos((List<Menu>) menuRespository.findAll());
-        if (menuDtos.size() > 0) {
-            return menuDtos;
+        try {
+            log.info("Getting all menus in system , restaurantService");
+            List<MenuDto> menuDtos = menuMapper
+                    .toMenuDtos((List<Menu>) menuRespository.findAll());
+            if (menuDtos.size() > 0) {
+                return menuDtos;
+            }
+            throw new RestaurantServiceException("No Menus found");
+        } catch (Exception e) {
+            throw new RestaurantServiceException(e.getMessage());
         }
-        throw new RestaurantServiceException("No Menus found");
-
     }
 
     @Override
@@ -79,54 +88,66 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuDto addNewItemInMenu(String menuId, FoodItemDto foodItemDto) {
-        log.info("Adding new Food Item to the menu: {}, menuService", menuId);
-        Optional<Menu> menuOptional = menuRespository.findById(menuId);
-        if (!menuOptional.isPresent()) {
-            throw new RestaurantServiceException("Menu with id" + menuId + "does not exist");
-        } else if(foodItemDto.getFoodItemStatus()== FoodItemStatus.DEACTIVE) {
-            throw new RestaurantServiceException("FoodItem "+ foodItemDto.getFoodItemName()
-                    + "is not Active");
-        }else{
-            Menu menu = menuOptional.get();
-            FoodItem foodItem = foodItemMapper.toFoodItem(foodItemDto);
-            List<FoodItem> foodItems = menu.getFoodItems();
-            foodItems.add(foodItem);
-            menu.setFoodItems(foodItems);
-            menuRespository.save(menu);
-            return menuMapper.toMenuDto(menu);
+        try {
+            log.info("Adding new Food Item to the menu: {}, menuService", menuId);
+            Optional<Menu> menuOptional = menuRespository.findById(menuId);
+            if (!menuOptional.isPresent()) {
+                throw new RestaurantServiceException("Menu with id" + menuId + "does not exist");
+            } else if (foodItemDto.getFoodItemStatus() == FoodItemStatus.DEACTIVE) {
+                throw new RestaurantServiceException("FoodItem " + foodItemDto.getFoodItemName()
+                        + "is not Active");
+            } else {
+                Menu menu = menuOptional.get();
+                FoodItem foodItem = foodItemMapper.toFoodItem(foodItemDto);
+                List<FoodItem> foodItems = menu.getFoodItems();
+                foodItems.add(foodItem);
+                menu.setFoodItems(foodItems);
+                menuRespository.save(menu);
+                return menuMapper.toMenuDto(menu);
+            }
+        } catch (Exception e) {
+            throw new RestaurantServiceException(e.getMessage());
         }
     }
 
     @Override
     public MenuDto removeItemInMenu(String menuId, String foodItemId) {
-        log.info("Removing the Food Item from menu: {}, menuService", menuId);
-        Optional<Menu> menuOptional = menuRespository.findById(menuId);
-        if (!menuOptional.isPresent()) {
-            throw new RestaurantServiceException("Menu with id" + menuId + "does not exist");
-        } else {
-            Menu menu = menuOptional.get();
-            List<FoodItem> foodItems = menu.getFoodItems();
-            for(FoodItem foodItem: foodItems){
-                if(foodItem.getFoodItemId().equals(foodItemId)){
-                    foodItems.remove(foodItem);
-                    break;
+        try {
+            log.info("Removing the Food Item from menu: {}, menuService", menuId);
+            Optional<Menu> menuOptional = menuRespository.findById(menuId);
+            if (!menuOptional.isPresent()) {
+                throw new RestaurantServiceException("Menu with id" + menuId + "does not exist");
+            } else {
+                Menu menu = menuOptional.get();
+                List<FoodItem> foodItems = menu.getFoodItems();
+                for (FoodItem foodItem : foodItems) {
+                    if (foodItem.getFoodItemId().equals(foodItemId)) {
+                        foodItems.remove(foodItem);
+                        break;
+                    }
                 }
+                menu.setFoodItems(foodItems);
+                menuRespository.save(menu);
+                return menuMapper.toMenuDto(menu);
             }
-            menu.setFoodItems(foodItems);
-            menuRespository.save(menu);
-            return menuMapper.toMenuDto(menu);
+        } catch (Exception e) {
+            throw new RestaurantServiceException(e.getMessage());
         }
     }
 
     @Override
     public MenuDto deleteMenu(String id) {
-        Optional<Menu> menu = menuRespository.findById(id);
-        log.warn("Deleting the Menu: {} from restaurant {}, MenuService", id, menu.get().getRestaurant().getRestaurantName());
-        if (!menu.isPresent()) {
-            throw new RestaurantServiceException("Menu with id" + id + "does not exist");
-        } else {
-            menuRespository.delete(menu.get());
-            return menuMapper.toMenuDto(menu.get());
+        try {
+            Optional<Menu> menu = menuRespository.findById(id);
+            log.warn("Deleting the Menu: {} from restaurant {}, MenuService", id, menu.get().getRestaurant().getRestaurantName());
+            if (!menu.isPresent()) {
+                throw new RestaurantServiceException("Menu with id" + id + "does not exist");
+            } else {
+                menuRespository.delete(menu.get());
+                return menuMapper.toMenuDto(menu.get());
+            }
+        } catch (Exception e) {
+            throw new RestaurantServiceException(e.getMessage());
         }
     }
 }

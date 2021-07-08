@@ -12,7 +12,7 @@ spring:
     password: rgit@1234
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     show-sql: false
   kafka:
     producer:
