@@ -4,7 +4,7 @@
 
 The chianed restaurants management system
 
-
+![alt tag](https://github.com/shubhamsasane/Restaurant-service/blob/main/Architecture.png)
   
 ## Functionalities
 
