@@ -50,13 +50,15 @@ public class FoodItemController {
             @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping
-    public Response<List<FoodItemDto>> getAllFoodItems() {
+    public Response<List<FoodItemDto>> getAllFoodItems(
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "3") Integer pageSize){
         log.info("Get all FoodItems, Order-service");
         return Response.<List<FoodItemDto>>builder()
                 .meta(ResponseMetadata.builder()
                         .statusCode(200)
                         .statusMessage(StatusMessage.SUCCESS.name()).build())
-                .data(foodItemService.getAllFoodItems())
+                .data(foodItemService.getAllFoodItems(pageNumber, pageSize))
                 .build();
     }
 

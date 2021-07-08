@@ -6,6 +6,7 @@ import com.tmc.order.model.entity.Order;
 import com.tmc.order.model.enums.OrderStatus;
 import com.tmc.order.repository.OrderRepository;
 import com.tmc.order.service.OrderService;
+import com.tmc.restaurant.dto.FoodItemDto;
 import com.tmc.restaurant.exception.OrderServiceException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,11 @@ public class OrderServiceImpl implements OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public List<OrderDto> getAllOrders() {
+    public List<OrderDto> getAllOrders(int pageNumber, int pageSize) {
         try {
-            List<OrderDto> orders = orderMapper.toOrderDTOs((List<Order>) orderRepository.findAll());
+            List<OrderDto> orders = orderMapper.
+                    toOrderDTOs(orderRepository
+                    .findAll(PageRequest.of(pageNumber, pageSize)).getContent());
             if (orders.size() > 0) {
                 return orders;
             }
@@ -53,11 +56,11 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    public OrderDto getOrderById(String eid) {
+    public OrderDto getOrderById(String id) {
         try {
-            Optional<Order> order = orderRepository.findById(eid);
+            Optional<Order> order = orderRepository.findById(id);
             if (!order.isPresent()) {
-                throw new OrderServiceException("Order with id" + eid + "does not exist");
+                throw new OrderServiceException("Order with id" + id + "does not exist");
             }
             return orderMapper.toOderDTO(order.get());
         } catch (Exception e) {
@@ -65,7 +68,26 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public List<OrderDto> getAllOrdersByRestaurant(String restaurantId) {
+        try {
+            List<OrderDto> orders = orderMapper
+                    .toOrderDTOs(orderRepository
+                            .findAllByRestaurantRestaurantId(restaurantId));
+            if (orders.size() > 0) {
+                return orders;
+            }
+            throw new OrderServiceException("No orders placed at this restaurant");
+        } catch (Exception e) {
+            throw new OrderServiceException(e.getMessage());
+        }
+    }
+
     public Boolean placeOrder(OrderDto orderDTO) {
+        double orderTotal = calculateTotal(orderDTO.getFoodItems());
+        double tax = orderTotal*0.2;
+        orderDTO.getBilling().setTotal(orderTotal);
+        orderDTO.getBilling().setTax(tax);
         Order order = orderMapper.ToOrder(orderDTO);
         order.setOrderStatus(OrderStatus.PLACED);
         orderRepository.save(order);
@@ -89,6 +111,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+
     public OrderDto updateOrder(String id, OrderDto orderDTO) {
         try {
             Optional<Order> ordersOptional = orderRepository.findById(id);
@@ -102,5 +125,19 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception e) {
             throw new OrderServiceException(e.getMessage());
         }
+    }
+
+    /**
+     * Calculates the total
+     * based on ordered food items
+     * @param foodItems
+     */
+
+    public double calculateTotal(List<FoodItemDto> foodItems){
+        double total = 0;
+        for(FoodItemDto foodItem: foodItems){
+            total += foodItem.getFoodItemPrice();
+        }
+        return total;
     }
 }

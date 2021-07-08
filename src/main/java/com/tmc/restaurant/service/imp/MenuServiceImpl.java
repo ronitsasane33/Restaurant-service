@@ -12,6 +12,7 @@ import com.tmc.restaurant.respository.FoodItemRespository;
 import com.tmc.restaurant.respository.MenuRespository;
 import com.tmc.restaurant.service.MenuService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,11 +65,11 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<MenuDto> getAllMenus() {
+    public List<MenuDto> getAllMenus(int pageNumber, int pageSize) {
         try {
             log.info("Getting all menus in system , restaurantService");
             List<MenuDto> menuDtos = menuMapper
-                    .toMenuDtos((List<Menu>) menuRespository.findAll());
+                    .toMenuDtos((List<Menu>) menuRespository.findAll(PageRequest.of(pageNumber, pageSize)).getContent());
             if (menuDtos.size() > 0) {
                 return menuDtos;
             }

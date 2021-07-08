@@ -9,7 +9,7 @@ import java.util.List;
 public interface MenuService {
     MenuDto getMenuById(String id);
     List<MenuDto> getAllMenusOfCurrentRestaurant(String restaurantName);
-    List<MenuDto> getAllMenus();
+    List<MenuDto> getAllMenus(int pageNumber, int pageSize);
     boolean createMenu(MenuDto menuDto);
     MenuDto deleteMenu(String id);
     MenuDto addNewItemInMenu(String menuId, FoodItemDto foodItemDto);

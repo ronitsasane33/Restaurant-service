@@ -34,7 +34,7 @@ public class Order {
     @Column(name = "creation_time")
     private Timestamp creationTime;
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<FoodItem> foodItems;
 
     @OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)

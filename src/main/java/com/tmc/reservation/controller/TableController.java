@@ -89,7 +89,8 @@ public class TableController {
             @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @PostMapping(value = "/{numberOfTables}")
-    public Response<String> createBulkTables(@PathVariable("numberOfTables") int numberOfTables) {
+    public Response<String> createBulkTables(
+            @PathVariable("numberOfTables") int numberOfTables) {
         return tableService.createBulkTables(numberOfTables) ? Response.<String>builder()
                 .meta(ResponseMetadata.builder()
                         .statusCode(200)
