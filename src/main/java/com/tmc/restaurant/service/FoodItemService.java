@@ -5,7 +5,7 @@ import com.tmc.restaurant.dto.FoodItemDto;
 import java.util.List;
 
 public interface FoodItemService {
-    List<FoodItemDto> getAllFoodItems();
+    List<FoodItemDto> getAllFoodItems(int pageNumber, int pageSize);
     boolean createFoodItem(FoodItemDto foodItemDto);
     FoodItemDto getFoodItemById(String id);
     FoodItemDto updateFoodItem(String foodItemId, FoodItemDto foodItemDto);

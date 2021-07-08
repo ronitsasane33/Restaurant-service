@@ -8,6 +8,7 @@ import com.tmc.restaurant.mapper.FoodItemMapper;
 import com.tmc.restaurant.respository.FoodItemRespository;
 import com.tmc.restaurant.service.FoodItemService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,10 +43,12 @@ public class FoodItemServiceImpl implements FoodItemService {
     }
 
     @Override
-    public List<FoodItemDto> getAllFoodItems() {
+    public List<FoodItemDto> getAllFoodItems(int pageNumber, int pageSize) {
         try {
             log.info("Getting all Food Items , FoodItemService");
-            List<FoodItemDto> foodItemDtos = foodItemMapper.toFoodItemDtos((List<FoodItem>) foodItemRespository.findAll());
+            List<FoodItemDto> foodItemDtos = foodItemMapper.
+                    toFoodItemDtos(foodItemRespository
+                            .findAll(PageRequest.of(pageNumber, pageSize)).getContent());
             if (foodItemDtos.size() > 0) {
                 return foodItemDtos;
             }

@@ -69,13 +69,15 @@ public class MenuController {
             @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Error", content = @Content)})
     @GetMapping()
-    public Response<List<MenuDto>> getAllMenus(){
+    public Response<List<MenuDto>> getAllMenus(
+        @RequestParam(defaultValue = "0") Integer pageNumber,
+        @RequestParam(defaultValue = "3") Integer pageSize){
         log.info("Getting all menus in system, MenuController");
         return Response.<List<MenuDto>>builder()
                 .meta(ResponseMetadata.builder()
                         .statusCode(200)
                         .statusMessage(StatusMessage.SUCCESS.name()).build())
-                .data(menuService.getAllMenus())
+                .data(menuService.getAllMenus(pageNumber, pageSize))
                 .build();
     }
 
